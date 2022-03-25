@@ -14,13 +14,14 @@ contract TokenFarm {
     address public owner;
 
     constructor(CGToken _cgToken, DaiToken _daiToken) {
-        owner = this;
+        owner = msg.sender;
         cgToken = _cgToken;
         daiToken = _daiToken;
     }
 
     modifier onlyOwner {
         require(owner == msg.sender, "You are not the owner");
+        _;
     }
 
     function stakeTokens(uint256 _amount) public {
@@ -36,7 +37,7 @@ contract TokenFarm {
         require(isStaked[msg.sender], "User not staked");
         require(_amount > 0, "Amount is not valid");
         uint256 balance = stakingBalanceOf[msg.sender];
-        require(balance - _amount > 0, "You do not have enough staked");
+        require(balance - _amount >= 0, "You do not have enough staked");
         stakingBalanceOf[msg.sender] -= _amount;
         isStaked[msg.sender] = false;
         daiToken.transfer(msg.sender, _amount);

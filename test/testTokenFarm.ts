@@ -76,6 +76,11 @@ describe('TokenFarm Contract', async () => {
 				);
 				expect(success);
 			});
+			it('Unstaking Tokens from contract', async () => {
+				await tokenFarm.unStakeTokens('10000000000000');
+				const balance = await tokenFarm.stakingBalanceOf(testUser.address);
+				expect(balance.eq(0));
+			});
 		});
 	});
 });
