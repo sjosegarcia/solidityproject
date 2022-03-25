@@ -61,10 +61,13 @@ describe('TokenFarm Contract', async () => {
 				const balance = await tokenFarm.stakingBalanceOf(testUser.address);
 				expect(balance.gt(0));
 			});
-			it('', async () => {
-				const hasStaked = await tokenFarm.hasStaked(testUser.address);
+			it('Check if user is Staked.', async () => {
 				const isStaked = await tokenFarm.isStaked(testUser.address);
-				expect(isStaked && hasStaked);
+				expect(isStaked);
+			});
+			it('Check if user has staked', async () => {
+				const hasStaked = await tokenFarm.hasStaked(testUser.address);
+				expect(hasStaked);
 			});
 		});
 	});
