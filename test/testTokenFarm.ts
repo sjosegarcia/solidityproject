@@ -1,5 +1,4 @@
 import { assert, expect } from 'chai';
-import { BigNumber } from 'ethers';
 import { ethers } from 'hardhat';
 
 describe('TokenFarm Contract', async () => {
@@ -37,14 +36,14 @@ describe('TokenFarm Contract', async () => {
 			it('Funding TokenFarm Contract', async () => {
 				await cgToken.transfer(tokenFarm.address, '1000000000000000000');
 				const tokenFarmBalance = await cgToken.balanceOf(tokenFarm.address);
-				expect(tokenFarmBalance.gt(0));
+				expect(tokenFarmBalance.toString() == '1000000000000000000');
 			});
 		});
 		describe('Fund mDAI to EOA', async () => {
 			it('Funding EOA with mDAI', async () => {
 				await mDaiToken.transfer(testUser.address, '1000000000000000000');
 				const mDaiBalance = await mDaiToken.balanceOf(testUser.address);
-				expect(mDaiBalance.gt(0));
+				expect(mDaiBalance.toString() == '1000000000000000000');
 			});
 		});
 		describe('Stake Token', async () => {
@@ -106,6 +105,19 @@ describe('TokenFarm Contract', async () => {
 				expect(balance.toString() == '9999900000000');
 			});
 		});
-		describe('Issue Staking Tokens', async () => {});
+		describe('Issue Staking Tokens', async () => {
+			it('Approves CG token', async () => {
+				const success = await cgToken.approve(
+					tokenFarm.address,
+					'10000000000000'
+				);
+				expect(success);
+			});
+			it('Issues Token rewards', async () => {
+				await tokenFarm.issueTokens();
+				const balance = await cgToken.balanceOf(testUser.address);
+				expect(balance.gt(0));
+			});
+		});
 	});
 });
