@@ -31,7 +31,8 @@
         "node_modules",
         "./contracts",
         "./public",
-        "./artifacts"
+        "./artifacts",
+        "./cache"
     ],
     "files": ["./hardhat.config.ts"]
 }
