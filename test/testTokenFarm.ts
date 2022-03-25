@@ -34,13 +34,13 @@ describe('TokenFarm', async () => {
 		it('Funding TokenFarm Contract', async () => {
 			await cgToken.transfer(tokenFarm.address, '1000000000000000000');
 			const tokenFarmBalance = await cgToken.balanceOf(tokenFarm.address);
-			assert(tokenFarmBalance.gt(0));
+			expect(tokenFarmBalance.gt(0));
 		});
 		it('Funding EOA with mDAI', async () => {
 			const accounts = await ethers.getSigners();
 			await mDaiToken.transfer(accounts[0].address, '1000000000000000000');
 			const eoaDaiBalance = await mDaiToken.balanceOf(accounts[0].address);
-			assert(eoaDaiBalance.gt(0));
+			expect(eoaDaiBalance.gt(0));
 		});
 	});
 });
