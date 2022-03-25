@@ -2,15 +2,15 @@ import { ethers } from 'hardhat';
 
 const tokeknFarmDeployer = async () => {
 	const cgTokenContract = await ethers.getContractFactory('CGToken');
-	const daiTokenContract = await ethers.getContractFactory('DaiToken');
+	const mDaiTokenContract = await ethers.getContractFactory('DaiToken');
 	const cgToken = await cgTokenContract.deploy();
-	const daiToken = await daiTokenContract.deploy();
+	const mDaiToken = await mDaiTokenContract.deploy();
 	await cgToken.deployed();
-	await daiToken.deployed();
+	await mDaiToken.deployed();
 	const tokenFarmContract = await ethers.getContractFactory('TokenFarm');
 	const tokenFarm = await tokenFarmContract.deploy(
 		cgToken.address,
-		daiToken.address
+		mDaiToken.address
 	);
 
 	await tokenFarm.deployed();
@@ -20,8 +20,8 @@ const tokeknFarmDeployer = async () => {
 	const tokenFarmBalance = await cgToken.balanceOf(tokenFarm.address);
 	console.log('TokenFarm balance of CG Token: ', tokenFarmBalance);
 	const accounts = await ethers.getSigners();
-	await daiToken.transfer(accounts[0].address, '1000000000000000000');
-	const eoaDaiBalance = await daiToken.balanceOf(accounts[0].address);
+	await mDaiToken.transfer(accounts[0].address, '1000000000000000000');
+	const eoaDaiBalance = await mDaiToken.balanceOf(accounts[0].address);
 	console.log('Dai balance of account', eoaDaiBalance);
 };
 

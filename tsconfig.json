@@ -25,7 +25,7 @@
         "./scripts",
         "./components",
         "./typechain",
-        "./tests"
+        "./test"
     ],
     "exclude": [
         "node_modules",
