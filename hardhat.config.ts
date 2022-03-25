@@ -25,7 +25,7 @@ task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
 const config: HardhatUserConfig = {
 	solidity: '0.8.10',
 	paths: {
-		artifacts: './src/artifacts',
+		artifacts: './artifacts',
 	},
 	networks: {
 		hardhat: {

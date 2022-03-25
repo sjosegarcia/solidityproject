@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "esnext",
+        "module": "commonjs",
         "lib": [ 
             "dom",
             "dom.iterable"
@@ -12,23 +13,25 @@
         "strict": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
+        //"moduleResolution": "nodenext",
+        //"resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "jsx": "react-jsx",
-        "module": "esnext"
+        "jsx": "react",
+        "outDir": "dist", 
     },
     "include": [
         "./pages",
         "./scripts",
         "./components",
+        "./typechain",
         "./tests"
     ],
     "exclude": [
         "node_modules",
         "./contracts",
-        "./public"
+        "./public",
+        "./artifacts"
     ],
     "files": ["./hardhat.config.ts"]
 }
