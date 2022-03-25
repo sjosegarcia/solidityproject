@@ -2,7 +2,7 @@ import { assert, expect } from 'chai';
 import { ethers } from 'hardhat';
 
 describe('TokenFarm Contract', async () => {
-	it('Starts the program', async () => {
+	it('Starts the Token Farm Contract Test', async () => {
 		const cgTokenContract = await ethers.getContractFactory('CGToken');
 		const mDaiTokenContract = await ethers.getContractFactory('DaiToken');
 		const tokenFarmContract = await ethers.getContractFactory('TokenFarm');
@@ -55,19 +55,26 @@ describe('TokenFarm Contract', async () => {
 				expect(success);
 			});
 			it('Staking Token into contract', async () => {
-				await tokenFarm.stakeTokens('10000000000000', {
-					from: testUser.address,
-				});
+				await tokenFarm.stakeTokens('10000000000000');
 				const balance = await tokenFarm.stakingBalanceOf(testUser.address);
 				expect(balance.gt(0));
 			});
-			it('Check if user is Staked.', async () => {
+			it('Check if user is staked.', async () => {
 				const isStaked = await tokenFarm.isStaked(testUser.address);
 				expect(isStaked);
 			});
 			it('Check if user has staked', async () => {
 				const hasStaked = await tokenFarm.hasStaked(testUser.address);
 				expect(hasStaked);
+			});
+		});
+		describe('Unstake Token', async () => {
+			it('Approves TokenFarm mDAI', async () => {
+				const success = await mDaiToken.approve(
+					testUser.address,
+					'10000000000000'
+				);
+				expect(success);
 			});
 		});
 	});
