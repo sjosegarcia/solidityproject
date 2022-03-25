@@ -1,55 +1,71 @@
 import { assert, expect } from 'chai';
 import { ethers } from 'hardhat';
-import { CGToken, DaiToken, TokenFarm } from '../typechain';
 
 describe('TokenFarm Contract', async () => {
-	let cgToken: CGToken;
-	let mDaiToken: DaiToken;
-	let tokenFarm: TokenFarm;
-	const accounts = await ethers.getSigners();
-
-	before(async () => {
+	it('Starts the program', async () => {
 		const cgTokenContract = await ethers.getContractFactory('CGToken');
-		cgToken = await cgTokenContract.deploy();
 		const mDaiTokenContract = await ethers.getContractFactory('DaiToken');
-		mDaiToken = await mDaiTokenContract.deploy();
-		await mDaiToken.deployed();
 		const tokenFarmContract = await ethers.getContractFactory('TokenFarm');
-		tokenFarm = await tokenFarmContract.deploy(
+		const cgToken = await cgTokenContract.deploy();
+		const mDaiToken = await mDaiTokenContract.deploy();
+		const tokenFarm = await tokenFarmContract.deploy(
 			cgToken.address,
 			mDaiToken.address
 		);
-	});
-	describe('CG Token Deployment', async () => {
-		it('Deploy CG Token', async () => {
-			await cgToken.deployed();
-			assert(cgToken.name, 'CG Token');
+		const accounts = await ethers.getSigners();
+		const testUser = accounts[0];
+		describe('CG Token Deployment', async () => {
+			it('Deploy CG Token', async () => {
+				await cgToken.deployed();
+				assert(cgToken.name, 'CG Token');
+			});
 		});
-	});
-	describe('mDai Token Deployment', async () => {
-		it('Deploy mDai Token', async () => {
-			await mDaiToken.deployed();
-			assert(mDaiToken.name, 'Mock Dai Token');
+		describe('mDai Token Deployment', async () => {
+			it('Deploy mDai Token', async () => {
+				await mDaiToken.deployed();
+				assert(mDaiToken.name, 'Mock Dai Token');
+			});
 		});
-	});
-	describe('TokenFarm Deployment', () => {
-		it('Check if TokenFarm contract has deployed', async () => {
-			await tokenFarm.deployed();
-			assert(tokenFarm.name, 'CG Token Farm');
+		describe('TokenFarm Deployment', () => {
+			it('Check if TokenFarm contract has deployed', async () => {
+				await tokenFarm.deployed();
+				assert(tokenFarm.name, 'CG Token Farm');
+			});
 		});
-	});
-	describe('TokenFarm Transfer', async () => {
-		it('Funding TokenFarm Contract', async () => {
-			await cgToken.transfer(tokenFarm.address, '1000000000000000000');
-			const tokenFarmBalance = await cgToken.balanceOf(tokenFarm.address);
-			expect(tokenFarmBalance.gt(0));
+		describe('TokenFarm Transfer', async () => {
+			it('Funding TokenFarm Contract', async () => {
+				await cgToken.transfer(tokenFarm.address, '1000000000000000000');
+				const tokenFarmBalance = await cgToken.balanceOf(tokenFarm.address);
+				expect(tokenFarmBalance.gt(0));
+			});
 		});
-	});
-	describe('Fund mDAI to EOA', async () => {
-		it('Funding EOA with mDAI', async () => {
-			await mDaiToken.transfer(accounts[0].address, '1000000000000000000');
-			const mDaiBalance = await mDaiToken.balanceOf(accounts[0].address);
-			expect(mDaiBalance.gt(0));
+		describe('Fund mDAI to EOA', async () => {
+			it('Funding EOA with mDAI', async () => {
+				await mDaiToken.transfer(testUser.address, '1000000000000000000');
+				const mDaiBalance = await mDaiToken.balanceOf(testUser.address);
+				expect(mDaiBalance.gt(0));
+			});
+		});
+		describe('Stake Token', async () => {
+			it('Approves mDAI token', async () => {
+				const success = await mDaiToken.approve(
+					tokenFarm.address,
+					'10000000000000'
+				);
+				expect(success);
+			});
+			it('Staking Token into contract', async () => {
+				await tokenFarm.stakeTokens('10000000000000', {
+					from: testUser.address,
+				});
+				const balance = await tokenFarm.stakingBalanceOf(testUser.address);
+				expect(balance.gt(0));
+			});
+			it('', async () => {
+				const hasStaked = await tokenFarm.hasStaked(testUser.address);
+				const isStaked = await tokenFarm.isStaked(testUser.address);
+				expect(isStaked && hasStaked);
+			});
 		});
 	});
 });
