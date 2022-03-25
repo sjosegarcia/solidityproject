@@ -1,4 +1,5 @@
 import { assert, expect } from 'chai';
+import { BigNumber } from 'ethers';
 import { ethers } from 'hardhat';
 
 describe('TokenFarm Contract', async () => {
@@ -57,7 +58,7 @@ describe('TokenFarm Contract', async () => {
 			it('Staking Token into contract', async () => {
 				await tokenFarm.stakeTokens('10000000000000');
 				const balance = await tokenFarm.stakingBalanceOf(testUser.address);
-				expect(balance.gt(0));
+				expect(balance.toString() == '10000000000000');
 			});
 			it('Check if user is staked.', async () => {
 				const isStaked = await tokenFarm.isStaked(testUser.address);
@@ -93,7 +94,7 @@ describe('TokenFarm Contract', async () => {
 			it('Stake Token to contract', async () => {
 				await tokenFarm.stakeTokens('10000000000000');
 				const balance = await tokenFarm.stakingBalanceOf(testUser.address);
-				expect(balance.gt(0));
+				expect(balance.toString() == '10000000000000');
 			});
 			it('Approves TokenFarm mDAI', async () => {
 				const success = await mDaiToken.approve(testUser.address, '100000000');
@@ -102,8 +103,9 @@ describe('TokenFarm Contract', async () => {
 			it('Unstakes Partial from contract', async () => {
 				await tokenFarm.unStakeTokens('100000000');
 				const balance = await tokenFarm.stakingBalanceOf(testUser.address);
-				expect(balance.gt(0));
+				expect(balance.toString() == '9999900000000');
 			});
 		});
+		describe('Issue Staking Tokens', async () => {});
 	});
 });
