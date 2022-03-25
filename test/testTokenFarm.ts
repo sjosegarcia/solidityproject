@@ -82,5 +82,28 @@ describe('TokenFarm Contract', async () => {
 				expect(balance.eq(0));
 			});
 		});
+		describe('Run partial Unstake', async () => {
+			it('Approves mDAI token', async () => {
+				const success = await mDaiToken.approve(
+					tokenFarm.address,
+					'10000000000000'
+				);
+				expect(success);
+			});
+			it('Stake Token to contract', async () => {
+				await tokenFarm.stakeTokens('10000000000000');
+				const balance = await tokenFarm.stakingBalanceOf(testUser.address);
+				expect(balance.gt(0));
+			});
+			it('Approves TokenFarm mDAI', async () => {
+				const success = await mDaiToken.approve(testUser.address, '100000000');
+				expect(success);
+			});
+			it('Unstakes Partial from contract', async () => {
+				await tokenFarm.unStakeTokens('100000000');
+				const balance = await tokenFarm.stakingBalanceOf(testUser.address);
+				expect(balance.gt(0));
+			});
+		});
 	});
 });
