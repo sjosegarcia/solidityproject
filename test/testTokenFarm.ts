@@ -116,7 +116,7 @@ describe('TokenFarm Contract', async () => {
 			it('Issues Token rewards', async () => {
 				await tokenFarm.issueTokens();
 				const balance = await cgToken.balanceOf(testUser.address);
-				expect(balance.gt(0));
+				expect(balance.toString() == '10000000000000');
 			});
 		});
 	});
